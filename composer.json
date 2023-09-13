@@ -1,0 +1,41 @@
+{
+  "name": "playcat/queue-base",
+  "type": "library",
+  "description": "This is part of playcat message queue. Support MQ service",
+  "keywords": [
+    "rabbitmq",
+    "redis",
+    "kafka",
+    "message",
+    "queue"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "CGI.NET",
+      "email": "root@playcat.net",
+      "homepage": "https://blog.playcat.net"
+    }
+  ],
+  "require": {
+    "psr/container": ">=1.0",
+    "php": ">7.2",
+    "ext-redis": "*",
+    "ext-rdKafka": "*",
+    "php-amqplib/php-amqplib": "^3.5"
+  },
+  "require-dev": {
+  },
+  "autoload": {
+    "psr-4": {
+      "Playcat\\Queue\\": "src"
+    },
+    "files": [
+    ]
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "platform-check": false
+  }
+}
