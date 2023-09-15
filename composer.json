@@ -18,7 +18,7 @@
     }
   ],
   "require": {
-    "psr/container": ">=1.0",
+    "psr/container": "^1.0",
     "php": ">7.2",
     "ext-redis": "*"
   },
@@ -31,13 +31,13 @@
     "files": [
     ]
   },
+  "suggest": {
+    "ext-rdKafka": "Kafka.",
+    "php-amqplib/php-amqplib": "Rabbitmq."
+  },
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "platform-check": false,
-    "platform": {
-      "ext-rdKafka": "*",
-      "php-amqplib/php-amqplib": "^3.5"
-    }
+    "platform-check": false
   }
 }
