@@ -20,9 +20,7 @@
   "require": {
     "psr/container": ">=1.0",
     "php": ">7.2",
-    "ext-redis": "*",
-    "ext-rdKafka": "*",
-    "php-amqplib/php-amqplib": "^3.5"
+    "ext-redis": "*"
   },
   "require-dev": {
   },
@@ -36,6 +34,10 @@
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "platform-check": false
+    "platform-check": false,
+    "platform": {
+      "ext-rdKafka": "*",
+      "php-amqplib/php-amqplib": "^3.5"
+    }
   }
 }
