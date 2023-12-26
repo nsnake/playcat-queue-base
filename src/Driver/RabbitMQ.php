@@ -46,7 +46,7 @@ class RabbitMQ extends Base implements DriverInterface
                 $this->config['options']['vhost'] ?? '/'
             );
         } catch (\Exception $e) {
-            throw new ConnectFailExceptions('Connection to rabbitmq failed.' . $e->getMessage());
+            throw new ConnectFailExceptions('Connection to Rabbitmq failed.' . $e->getMessage());
         }
     }
 

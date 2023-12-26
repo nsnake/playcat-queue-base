@@ -1,7 +1,7 @@
 {
   "name": "playcat/queue-base",
   "type": "library",
-  "description": "This is part of playcat message queue. Support MQ service",
+  "description": "This is part of playcat message queue.",
   "keywords": [
     "rabbitmq",
     "redis",
@@ -22,14 +22,10 @@
     "php": ">7.2",
     "ext-redis": "*"
   },
-  "require-dev": {
-  },
   "autoload": {
     "psr-4": {
       "Playcat\\Queue\\": "src"
-    },
-    "files": [
-    ]
+    }
   },
   "suggest": {
     "ext-rdKafka": "Kafka.",
