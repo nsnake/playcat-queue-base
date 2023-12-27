@@ -9,11 +9,11 @@ interface StorageInterface
 
     public function addData(int $iconic_id, string $data): int;
 
-    public function upData(int $ts_id, int $timer_id): bool;
+    public function upData(int $j_id, int $timer_id, int $expiration): bool;
 
-    public function getDataById(int $ts_id): array;
+    public function getDataById(int $j_id): array;
 
-    public function delData(int $ts_id): bool;
+    public function delData(int $j_id): bool;
 
 
 }

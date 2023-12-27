@@ -40,36 +40,37 @@ class Storage implements StorageInterface
     }
 
     /**
-     * @param int $ts_id
+     * @param int $j_id
      * @param int $timer_id
      * @return bool
      */
-    public function upData(int $ts_id, int $timer_id): bool
+    public function upData(int $j_id, int $timer_id,int $expiration): bool
     {
         return (bool)$this->getTable()->save([
-            'tsid' => $ts_id,
+            'jid' => $j_id,
             'timerid' => $timer_id,
+            'expiration' => $expiration
         ]);
     }
 
     /**
-     * @param int $ts_id
+     * @param int $j_id
      * @return array
      */
-    public function getDataById(int $ts_id): array
+    public function getDataById(int $j_id): array
     {
         return $this->getTable()
-            ->where('ts_id', $ts_id)
+            ->where('j_id', $j_id)
             ->findOrEmpty();
     }
 
     /**
-     * @param int $ts_id
+     * @param int $j_id
      * @return bool
      */
-    public function delData(int $ts_id): bool
+    public function delData(int $j_id): bool
     {
-        return (bool)$this->getTable()->delete($ts_id);
+        return (bool)$this->getTable()->delete($j_id);
     }
 
 
