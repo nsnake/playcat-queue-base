@@ -89,7 +89,7 @@ class ProducerData implements ProducerDataInterface
         return $this->delay_time;
     }
 
-    public function serializeData(bool $is_redis = false): array|string
+    public function serializeData(bool $is_redis = false): array
     {
         $data = msgpack_pack([
             'id' => $this->id,
@@ -98,10 +98,9 @@ class ProducerData implements ProducerDataInterface
             'retrycount' => $this->retry_count,
             'queuedata' => $this->queue_data,
             'delaytime' => $this->delay_time
-        ]);
+        ]) ?? [];
         return $is_redis === false ? $data : ["data" => $data];
     }
-
 
 
 }

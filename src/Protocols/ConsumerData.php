@@ -57,12 +57,12 @@ class ConsumerData implements ConsumerDataInterface
         return $this->queue_data;
     }
 
-    public function unSerializeData(string|array $serialize_data): array|null
+    public function unSerializeData($serialize_data): array
     {
         $serialize_data = !is_array($serialize_data)
             ? $serialize_data
             : $serialize_data['data'];
-        return msgpack_unpack($serialize_data);
+        return msgpack_unpack($serialize_data) ?? [];
     }
 
 }

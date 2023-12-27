@@ -30,7 +30,7 @@ interface ConsumerDataInterface
      * @param string|array $serialize_data
      * @return array|null
      */
-    public function unSerializeData(string|array $serialize_data): array|null;
+    public function unSerializeData($serialize_data): array;
 }
 
 
