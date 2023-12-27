@@ -89,27 +89,19 @@ class ProducerData implements ProducerDataInterface
         return $this->delay_time;
     }
 
-
-    public function getArray(): array
+    public function serializeData(bool $is_redis = false): array|string
     {
-        return $this->getData();
-    }
-
-    public function getJSON(): string
-    {
-        return json_encode($this->getData());
-    }
-
-    protected function getData(): array
-    {
-        return [
+        $data = msgpack_pack([
             'id' => $this->id,
             'channel' => $this->channel,
             'creattime' => time(),
             'retrycount' => $this->retry_count,
-            'queuedata' => serialize($this->queue_data),
+            'queuedata' => $this->queue_data,
             'delaytime' => $this->delay_time
-        ];
+        ]);
+        return $is_redis === false ? $data : ["data" => $data];
     }
+
+
 
 }

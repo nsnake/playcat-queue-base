@@ -112,7 +112,7 @@ class RabbitMQ extends Base implements DriverInterface
     public function push(ProducerDataInterface $payload): ?string
     {
         $msgid = $this->generateMsgid();
-        $data = new AMQPMessage($payload->getJSON(), ['message_id' => $msgid]);
+        $data = new AMQPMessage($payload->serializeData(), ['message_id' => $msgid]);
         $this->getConnection()->basic_publish($data, self::CONSUMEREXCHANGENAM, $payload->getChannel());
         return $msgid;
     }

@@ -97,7 +97,7 @@ class Kafka extends Base implements DriverInterface
         $msgid = $this->generateMsgid();
         $this->getKafkaProduce()
             ->newTopic($payload->getChannel())
-            ->producev(RD_KAFKA_PARTITION_UA, 0, $payload->getJSON(), null, ['message_id' => $msgid]);
+            ->producev(RD_KAFKA_PARTITION_UA, 0, $payload->serializeData(), null, ['message_id' => $msgid]);
         return $this->getKafkaProduce()->flush(100) === RD_KAFKA_RESP_ERR_NO_ERROR
             ? $msgid : '';
     }

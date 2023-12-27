@@ -62,16 +62,11 @@ interface ProducerDataInterface
     public function getDelayTime(): int;
 
     /**
-     *  Return an array data
-     * @return array
+     * For redis, xadd only accept hash not string.
+     * @param bool $is_redis
+     * @return array|string
      */
-    public function getArray(): array;
-
-    /**
-     * Return JSON strings data
-     * @return string
-     */
-    public function getJSON(): string;
+    public function serializeData(bool $is_redis): array|string;
 
 
 }

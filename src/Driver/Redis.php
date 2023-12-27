@@ -111,7 +111,7 @@ class Redis extends Base implements DriverInterface
      */
     public function push(ProducerDataInterface $payload): ?string
     {
-        return $this->getRedis()->xadd($payload->getChannel(), '*', $payload->getArray());
+        return $this->getRedis()->xadd($payload->getChannel(), '*', $payload->serializeData(true));
     }
 
 }
