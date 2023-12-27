@@ -22,38 +22,45 @@ class Storage implements StorageInterface
      */
     private function getTable(): Db
     {
-        return Db::table('timerserver');
+        return Db::table('jobs');
     }
 
     /**
      * @param int $iconic_id
-     * @param int $timer_id
      * @param string $data
-     * @return bool
+     * @return int
      */
-    public function addData(int $iconic_id, int $timer_id, string $data): int
+    public function addData(int $iconic_id, string $data): int
     {
         return $this->getTable()->insertGetId([
-            'iconic_id' => $iconic_id,
-            'timer_id' => $timer_id,
+            'iconicid' => $iconic_id,
+            'timerid' => $timer_id,
             'data' => $data
         ]);
     }
 
     /**
      * @param int $ts_id
-     * @param int $iconic_id
      * @param int $timer_id
      * @return bool
      */
-    public function upData(int $ts_id, int $iconic_id, int $timer_id): bool
+    public function upData(int $ts_id, int $timer_id): bool
     {
         return (bool)$this->getTable()->save([
-            'ts_id' => $ts_id,
-            'iconic_id' => $iconic_id,
-            'timer_id' => $timer_id,
-            'data' => $data
+            'tsid' => $ts_id,
+            'timerid' => $timer_id,
         ]);
+    }
+
+    /**
+     * @param int $ts_id
+     * @return array
+     */
+    public function getDataById(int $ts_id): array
+    {
+        return $this->getTable()
+            ->where('ts_id', $ts_id)
+            ->findOrEmpty();
     }
 
     /**
