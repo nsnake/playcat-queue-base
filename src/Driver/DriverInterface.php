@@ -1,6 +1,6 @@
 <?php
 
-namespace Playcat\Queue\Protocols;
+namespace Playcat\Queue\Driver;
 
 use Playcat\Queue\Model\Payload;
 

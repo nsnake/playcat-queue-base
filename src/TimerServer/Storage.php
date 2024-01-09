@@ -44,7 +44,7 @@ class Storage implements StorageInterface
      * @param int $timer_id
      * @return bool
      */
-    public function upData(int $j_id, int $timer_id,int $expiration): bool
+    public function upData(int $j_id, int $timer_id, int $expiration): bool
     {
         return (bool)$this->getTable()->save([
             'jid' => $j_id,

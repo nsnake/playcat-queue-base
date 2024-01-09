@@ -6,7 +6,6 @@ use Playcat\Queue\Exceptions\ParamsError;
 use Playcat\Queue\Model\Payload;
 use Playcat\Queue\Protocols\ConsumerData;
 use Playcat\Queue\Protocols\ConsumerDataInterface;
-use Playcat\Queue\Protocols\DriverInterface;
 use Playcat\Queue\Protocols\ProducerDataInterface;
 use RuntimeException;
 
