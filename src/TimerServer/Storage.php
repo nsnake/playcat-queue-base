@@ -2,10 +2,12 @@
 
 namespace Playcat\Queue\TimerServer;
 
-use think\facade\Db;
+use think\db\Query;
+use think\DbManager;
 
 class Storage implements StorageInterface
 {
+    private $db;
 
     /**
      * @param array $config
@@ -13,64 +15,70 @@ class Storage implements StorageInterface
      */
     public function setDriver(array $config): void
     {
-        Db::setConfig($config);
-
+        $db = new DbManager();
+        $db->setConfig($config);
+        $this->db = new Query($db->connect());
     }
 
     /**
-     * @return Db
+     * @return Query
      */
-    private function getTable(): Db
+    private function getTable(): Query
     {
-        return Db::table('jobs');
+        return $this->db->table('jobs');
     }
 
     /**
      * @param int $iconic_id
-     * @param string $data
+     * @param int $expiration
+     * @param object $data
      * @return int
      */
-    public function addData(int $iconic_id, string $data): int
+    public function addData(int $iconic_id, int $expiration, object $data): int
     {
         return $this->getTable()->insertGetId([
             'iconicid' => $iconic_id,
-            'timerid' => $timer_id,
-            'data' => $data
+            'data' => serialize($data),
+            'expiration' => time() + $expiration
         ]);
     }
 
     /**
-     * @param int $j_id
+     * @param int $jid
      * @param int $timer_id
      * @return bool
      */
-    public function upData(int $j_id, int $timer_id, int $expiration): bool
+    public function upData(int $jid, int $timer_id): bool
     {
         return (bool)$this->getTable()->save([
-            'jid' => $j_id,
+            'jid' => $jid,
             'timerid' => $timer_id,
-            'expiration' => $expiration
         ]);
     }
 
     /**
-     * @param int $j_id
+     * @param int $jid
      * @return array
      */
-    public function getDataById(int $j_id): array
+    public function getDataById(int $jid): array
     {
-        return $this->getTable()
-            ->where('j_id', $j_id)
+        $data = $this->getTable()
+            ->where('jid', $jid)
             ->findOrEmpty();
+        if ($data) {
+            $data['data'] = unserialize($data['data']);
+        }
+        return $data;
     }
 
     /**
-     * @param int $j_id
+     * @param int $jid
      * @return bool
+     * @throws \think\db\exception\DbException
      */
-    public function delData(int $j_id): bool
+    public function delData(int $jid): bool
     {
-        return (bool)$this->getTable()->delete($j_id);
+        return (bool)$this->getTable()->delete($jid);
     }
 
 
