@@ -25,7 +25,7 @@ class Storage implements StorageInterface
      */
     private function getTable(): Query
     {
-        return $this->db->table('jobs');
+        return $this->db->removeOption()->table('jobs');
     }
 
     /**
@@ -54,6 +54,7 @@ class Storage implements StorageInterface
             'jid' => $jid,
             'timerid' => $timer_id,
         ]);
+        return $data;
     }
 
     /**
