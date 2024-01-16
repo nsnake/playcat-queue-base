@@ -74,12 +74,12 @@ class Storage implements StorageInterface
 
     /**
      * @param int $jid
-     * @return bool
+     * @return int
      * @throws \think\db\exception\DbException
      */
-    public function delData(int $jid): bool
+    public function delData(int $jid): int
     {
-        return (bool)$this->getTable()->delete($jid);
+        return $this->getTable()->delete($jid);
     }
 
 
