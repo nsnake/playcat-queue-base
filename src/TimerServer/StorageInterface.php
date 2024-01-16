@@ -13,7 +13,7 @@ interface StorageInterface
 
     public function getDataById(int $jid): array;
 
-    public function delData(int $jid): bool;
+    public function delData(int $jid): int;
 
 
 }
