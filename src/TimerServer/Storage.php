@@ -2,6 +2,7 @@
 
 namespace Playcat\Queue\TimerServer;
 
+use Playcat\Queue\Protocols\ProducerData;
 use think\db\Query;
 use think\DbManager;
 
@@ -67,7 +68,7 @@ class Storage implements StorageInterface
             ->where('jid', $jid)
             ->findOrEmpty();
         if ($data) {
-            $data['data'] = unserialize($data['data']);
+            $data['data'] = $this->unserializeData($data['data']);
         }
         return $data;
     }
@@ -82,6 +83,30 @@ class Storage implements StorageInterface
         return $this->getTable()->delete($jid);
     }
 
+    /**
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getHistoryJobs(): array
+    {
+        return $this->getTable()
+            ->select()
+            ->map(function ($item) {
+                $item['data'] = $this->unserializeData($item['data']);
+                return $item;
+            })->toArray();
+    }
+
+    /**
+     * @param string $data
+     * @return ProducerData
+     */
+    private function unserializeData(string $serializeData): ProducerData
+    {
+        return unserialize($serializeData);
+    }
 
 }
 
