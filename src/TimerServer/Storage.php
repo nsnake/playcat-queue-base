@@ -17,7 +17,12 @@ class Storage implements StorageInterface
     public function setDriver(array $config): void
     {
         $db = new DbManager();
-        $db->setConfig($config);
+        $db->setConfig([
+            'default' => $config['type'],
+            'connections' => [
+                $config['type'] => $config
+            ]
+        ]);
         $this->db = new Query($db->connect());
     }
 
