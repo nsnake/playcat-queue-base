@@ -21,7 +21,7 @@ class SwooleScoket extends StreamSocket
      * @return false|resource
      * @throws ConnectFailExceptions
      */
-    final private function getClient()
+    final protected function getClient()
     {
         if (!self::$client) {
             $ts_host = 'localhost';
@@ -43,5 +43,14 @@ class SwooleScoket extends StreamSocket
         return self::$client;
     }
 
+    final protected function socketRead()
+    {
+        return $this->getClient()->recv();
+    }
+
+    final protected function socketWrite(string $protocols)
+    {
+        return $this->getClient()->send($protocols) . "\r\n";
+    }
 
 }

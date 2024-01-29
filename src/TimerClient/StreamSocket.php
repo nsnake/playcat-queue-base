@@ -32,18 +32,15 @@ class StreamSocket implements TimerClientInterface
     {
         if (!self::$client) {
             $context = stream_context_create();
-            if (str_starts_with($host, 'unix://')) {
-                $socket = @stream_socket_client($host, $error, $errorMessage, 3, STREAM_CLIENT_CONNECT, $context);
-            } else {
-                $socket = @stream_socket_client(
-                    "tcp://$host:$port",
-                    $error,
-                    $errorMessage,
-                    3,
-                    STREAM_CLIENT_CONNECT,
-                    $context
-                );
-            }
+            $socket = @stream_socket_client(
+                'tcp://' . $this->config['timerserver'],
+                $error,
+                $errorMessage,
+                3,
+                STREAM_CLIENT_CONNECT,
+                $context
+            );
+
             if ($socket === false) {
                 throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errstr);
             }
@@ -53,20 +50,56 @@ class StreamSocket implements TimerClientInterface
     }
 
     /**
+     * @return false|string
+     * @throws ConnectFailExceptions
+     */
+    protected function socketRead()
+    {
+        return fread($this->getClient(), 2048);
+    }
+
+    /**
+     * @param string $protocols
+     * @return false|int
+     * @throws ConnectFailExceptions
+     */
+    protected function socketWrite(string $protocols)
+    {
+        return fwrite($this->getClient(), $protocols . "\n");
+    }
+
+    /**
+     * @param TimerClientProtocols $protocols
+     * @return string
+     */
+    protected function serializeProtocols(TimerClientProtocols $protocols): string
+    {
+        return serialize($protocols);
+    }
+
+    /**
+     * @param string $protocols
+     * @return array|false
+     */
+    protected function unserializeProtocols(string $protocols): array
+    {
+        return json_decode($protocols, true) ?? [];
+    }
+
+    /**
      * @param string $command
      * @param ProducerData $payload
      * @return array
      */
-    protected function sendCommand(string $command, ProducerData $payload): array
+    public function sendCommand(string $command, ProducerData $payload): array
     {
         $result = [];
         try {
             $protocols = new TimerClientProtocols();
             $protocols->setCMD($command);
             $protocols->setPayload($payload);
-            $this->getClient()->send(serialize($protocols) . "\r\n");
-            $result = $this->client()->recv();
-            $result = json_decode($result, true) ?? [];
+            $this->socketWrite($this->serializeProtocols($protocols));
+            $result = $this->unserializeProtocols($this->socketRead());
         } catch (ConnectFailExceptions $e) {
         }
         return $result;

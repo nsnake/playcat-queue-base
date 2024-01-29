@@ -11,6 +11,8 @@
 
 namespace Playcat\Queue\TimerClient;
 
+use Playcat\Queue\Protocols\ProducerDataInterface;
+
 class TimerClientProtocols
 {
     const CMD_PUSH = 'push';

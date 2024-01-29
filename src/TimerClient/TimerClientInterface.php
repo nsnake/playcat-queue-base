@@ -12,12 +12,15 @@
 namespace Playcat\Queue\TimerClient;
 
 use Playcat\Queue\Protocols\ProducerData;
+use Playcat\Queue\TimerClient\TimerClientProtocols;
 
 interface TimerClientInterface
 {
 
-    public function push(ProducerData $payload): string;
+    function sendCommand(string $command, ProducerData $payload): array;
 
-    public function del(ProducerData $payload): bool;
+    function push(ProducerData $payload): string;
+
+    function del(ProducerData $payload): bool;
 }
 
