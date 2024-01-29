@@ -32,8 +32,11 @@ class StreamSocket implements TimerClientInterface
     {
         if (!self::$client) {
             $context = stream_context_create();
+            if (!preg_match('/^unix:(.*)$/i', $this->config['timerserver'], $matches)) {
+                $this->config['timerserver'] = 'tcp://' . $this->config['timerserver'];
+            }
             $socket = @stream_socket_client(
-                'tcp://' . $this->config['timerserver'],
+                $this->config['timerserver'],
                 $error,
                 $errorMessage,
                 3,
