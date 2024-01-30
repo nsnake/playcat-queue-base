@@ -9,7 +9,7 @@
  * @author CGI.NET
  */
 
-namespace Playcat\Queue\Consumer;
+namespace Playcat\Queue\Producer;
 
 use Playcat\Queue\Driver\DriverInterface;
 use Playcat\Queue\Driver\Kafka;
@@ -17,7 +17,7 @@ use Playcat\Queue\Driver\RabbitMQ;
 use Playcat\Queue\Driver\Redis;
 use Playcat\Queue\Driver\Rediscluster;
 
-class Consumer
+class Producer
 {
     /**
      * @param array $manager_config
