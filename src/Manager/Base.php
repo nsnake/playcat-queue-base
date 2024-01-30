@@ -13,6 +13,8 @@ namespace Playcat\Queue\Manager;
 
 use Playcat\Queue\Driver\DriverInterface;
 use Playcat\Queue\Producer\Producer;
+use Playcat\Queue\Protocols\ConsumerDataInterface;
+use Playcat\Queue\Protocols\ProducerDataInterface;
 
 class Base implements ManegerInterface
 {
@@ -20,19 +22,7 @@ class Base implements ManegerInterface
     protected $manager_config;
     protected $producer;
     protected $tc;
-
-    final public static function getInstance(): self
-    {
-        if (!self::$instance instanceof self) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    public function __construct()
-    {
-    }
-
+    
     protected function getTimeClient()
     {
     }
