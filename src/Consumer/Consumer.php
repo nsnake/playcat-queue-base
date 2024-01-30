@@ -9,7 +9,7 @@
  * @author CGI.NET
  */
 
-namespace Playcat\Queue\Producer;
+namespace Playcat\Queue\Consumer;
 
 use Playcat\Queue\Driver\DriverInterface;
 use Playcat\Queue\Driver\Kafka;
@@ -17,14 +17,14 @@ use Playcat\Queue\Driver\RabbitMQ;
 use Playcat\Queue\Driver\Redis;
 use Playcat\Queue\Driver\Rediscluster;
 
-class Producer
+class Consumer
 {
     /**
      * @param array $manager_config
      * @return DriverInterface
      * @throws \Playcat\Queue\Exceptions\ConnectFailExceptions
      */
-    public function autoSelect(array $manager_config): DriverInterface
+    public function DriverByAuto(array $manager_config): DriverInterface
     {
         switch ($manager_config['driver']) {
             case 'Playcat\Queue\Driver\Rediscluster':
