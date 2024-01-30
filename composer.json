@@ -14,13 +14,13 @@
     {
       "name": "CGI.NET",
       "email": "root@playcat.net",
-      "homepage": "https://blog.playcat.net"
+      "homepage": "https://github.com/nsnake/playcat-queue-base"
     }
   ],
   "require": {
     "psr/container": "^1.0",
     "php": ">7.2",
-    "ext-redis": "*",
+    "ext-redis": "^5.0",
     "ext-msgpack": "^2.0",
     "topthink/think-orm": "^2.0"
   },

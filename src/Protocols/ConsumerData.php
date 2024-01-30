@@ -1,4 +1,13 @@
 <?php
+/**
+ *
+ *
+ * @license MIT License (MIT)
+ *
+ * For full copyright and license information, please see the LICENCE files.
+ *
+ * @author CGI.NET
+ */
 
 namespace Playcat\Queue\Protocols;
 
@@ -6,7 +15,7 @@ use Playcat\Queue\Exceptions\ParamsError;
 
 class ConsumerData implements ConsumerDataInterface
 {
-    protected $channel = 'default';
+    protected $channel = 'playcatqueue';
     protected $creat_time = 0;
     protected $retry_count = 0;
     protected $queue_data = '[]';
