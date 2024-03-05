@@ -12,7 +12,7 @@
 namespace Playcat\Queue\TimerServer;
 
 use Playcat\Queue\Protocols\ProducerData;
-use think\db\Query;
+use think\db\BaseQuery;
 use think\DbManager;
 
 class Storage implements StorageInterface
@@ -32,15 +32,16 @@ class Storage implements StorageInterface
                 $config['type'] => $config
             ]
         ]);
-        $this->db = new Query($db->connect());
+        //$this->db = new Query($db->connect());
+        $this->db = $db->connect();
     }
 
     /**
-     * @return Query
+     * @return BaseQuery
      */
-    private function getTable(): Query
+    private function getTable(): BaseQuery
     {
-        return $this->db->removeOption()->table('jobs');
+        return $this->db->table('jobs');
     }
 
     /**
@@ -69,7 +70,6 @@ class Storage implements StorageInterface
             'jid' => $jid,
             'timerid' => $timer_id,
         ]);
-        return $data;
     }
 
     /**
