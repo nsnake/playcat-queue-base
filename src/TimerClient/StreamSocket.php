@@ -16,7 +16,7 @@ use Playcat\Queue\Protocols\ProducerData;
 
 class StreamSocket implements TimerClientInterface
 {
-    protected static $client;
+    protected static $client = null;
     protected $config;
 
     public function __construct(array $config)
@@ -30,7 +30,7 @@ class StreamSocket implements TimerClientInterface
      */
     protected function getClient()
     {
-        if (!self::$client) {
+        if (self::$client === null) {
             $context = stream_context_create();
             if (!preg_match('/^unix:(.*)$/i', $this->config['timerserver'], $matches)) {
                 $this->config['timerserver'] = 'tcp://' . $this->config['timerserver'];
@@ -48,6 +48,7 @@ class StreamSocket implements TimerClientInterface
                 throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errorMessage);
             }
             stream_set_timeout($socket, 3);
+            self::$client = $socket;
         }
         return self::$client;
     }
