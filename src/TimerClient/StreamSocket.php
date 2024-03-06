@@ -45,7 +45,7 @@ class StreamSocket implements TimerClientInterface
             );
 
             if ($socket === false) {
-                throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errstr);
+                throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errorMessage);
             }
             stream_set_timeout($socket, 3);
         }

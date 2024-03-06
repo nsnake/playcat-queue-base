@@ -32,7 +32,6 @@ class Storage implements StorageInterface
                 $config['type'] => $config
             ]
         ]);
-        //$this->db = new Query($db->connect());
         $this->db = $db->connect();
     }
 
