@@ -20,7 +20,7 @@
   "require": {
     "psr/container": "^1.0",
     "php": ">7.2",
-    "ext-redis": "^5.0",
+    "ext-redis": "^4.0",
     "ext-msgpack": "^2.0",
     "topthink/think-orm": "^2.0"
   },
