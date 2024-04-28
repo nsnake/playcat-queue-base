@@ -98,7 +98,7 @@ class ProducerData implements ProducerDataInterface
         return $this->delay_time;
     }
 
-    public function serializeData(bool $is_redis = false): array
+    public function serializeData(bool $is_redis = false)
     {
         $data = msgpack_pack([
             'id' => $this->id,

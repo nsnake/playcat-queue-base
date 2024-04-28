@@ -75,7 +75,7 @@ interface ProducerDataInterface
      * @param bool $is_redis
      * @return array|string
      */
-    public function serializeData(bool $is_redis): array;
+    public function serializeData(bool $is_redis);
 
 
 }
