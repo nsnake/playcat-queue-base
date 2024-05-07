@@ -47,7 +47,6 @@ class StreamSocket implements TimerClientInterface
             if ($socket === false) {
                 throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errorMessage);
             }
-            stream_set_timeout($socket, 3);
             self::$client = $socket;
         }
         return self::$client;
@@ -59,7 +58,12 @@ class StreamSocket implements TimerClientInterface
      */
     protected function socketRead()
     {
-        return fread($this->getClient(), 2048);
+        $result = fread($this->getClient(), 2048);
+        if ($result == false) {
+            fclose(self::$client);
+            self::$client = null;
+        }
+        return $result;
     }
 
     /**
@@ -69,7 +73,12 @@ class StreamSocket implements TimerClientInterface
      */
     protected function socketWrite(string $protocols)
     {
-        return fwrite($this->getClient(), $protocols . "\n");
+        $result = fwrite($this->getClient(), $protocols . "\n");
+        if ($result == false) {
+            fclose(self::$client);
+            self::$client = null;
+        }
+        return $result;
     }
 
     /**
