@@ -60,8 +60,7 @@ class StreamSocket implements TimerClientInterface
     {
         $result = fread($this->getClient(), 2048);
         if ($result == false) {
-            fclose(self::$client);
-            self::$client = null;
+            throw new ConnectFailExceptions('Get data error!');
         }
         return $result;
     }
@@ -75,8 +74,7 @@ class StreamSocket implements TimerClientInterface
     {
         $result = fwrite($this->getClient(), $protocols . "\n");
         if ($result == false) {
-            fclose(self::$client);
-            self::$client = null;
+            throw new ConnectFailExceptions('Send data error!');
         }
         return $result;
     }
@@ -114,6 +112,8 @@ class StreamSocket implements TimerClientInterface
             $this->socketWrite($this->serializeProtocols($protocols));
             $result = $this->unserializeProtocols($this->socketRead());
         } catch (ConnectFailExceptions $e) {
+            //ok,let's reconnecten next time.
+            $this->disconnect();
         }
         return $result;
     }
@@ -140,5 +140,28 @@ class StreamSocket implements TimerClientInterface
         return ($result && $result['code'] == 200) ? true : false;
     }
 
+
+    /**
+     * @return bool
+     */
+    public function keepAlive(): bool
+    {
+        fwrite(self::$client, 'ping' . "\n");
+        $pong = fread(self::$client, 4);
+        if ($pong != 'pong') {
+            $this->disconnect();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @return void
+     */
+    public function disconnect(): void
+    {
+        fclose(self::$client);
+        self::$client = null;
+    }
 
 }
