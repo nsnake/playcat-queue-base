@@ -12,6 +12,7 @@
 namespace Playcat\Queue\Manager;
 
 use Playcat\Queue\Driver\DriverInterface;
+use Playcat\Queue\Exceptions\ConnectFailExceptions;
 use Playcat\Queue\Producer\Producer;
 use Playcat\Queue\Protocols\ConsumerDataInterface;
 use Playcat\Queue\Protocols\ProducerDataInterface;
@@ -22,7 +23,9 @@ class Base implements ManegerInterface
     protected $manager_config;
     protected $producer;
     protected $tc;
-    
+    protected $restry_maxtimes = 5;
+    protected $retry_times = 0;
+
     protected function getTimeClient()
     {
     }
@@ -52,8 +55,9 @@ class Base implements ManegerInterface
 
     public function push(ProducerDataInterface $payload): ?string
     {
-        return $payload->getDelayTime() > 0
-            ? $this->getTimeClient()->push($payload) : $this->getProducer()->push($payload);
+        return $payload->getDelayTime() > 0 ?
+            $this->send2ts('push', $payload) :
+            $this->getProducer()->push($payload);
     }
 
     public function consumerFinished(): bool
@@ -63,6 +67,29 @@ class Base implements ManegerInterface
 
     public function del(ProducerDataInterface $payload): bool
     {
-        return $this->getTimeClient()->del($payload);
+        return $this->send2ts('del', $payload);
+    }
+
+    /**
+     * @param string $command
+     * @param ProducerDataInterface $payload
+     * @return string
+     * @throws ConnectFailExceptions
+     */
+    private function send2ts(string $command, ProducerDataInterface $payload): string
+    {
+        if ($this->retry_times >= $this->restry_maxtimes) {
+            throw new ConnectFailExceptions('Connect to playcat time server failed.', 100);
+        }
+        try {
+            $result = $this->getTimeClient()->$command($payload);
+        } catch (ConnectFailExceptions $exception) {
+            //OK,when network have issure or other,will auto reconnect to TS.
+            sleep(2);
+            $this->retry_times++;
+            $result = $this->send2ts($command, $payload);
+        }
+        $this->retry_times = 0;
+        return $result;
     }
 }

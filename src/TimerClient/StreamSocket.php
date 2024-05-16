@@ -11,6 +11,7 @@
 
 namespace Playcat\Queue\TimerClient;
 
+use Playcat\Queue\Exceptions\DisconnectedExceptions;
 use Playcat\Queue\Exceptions\ConnectFailExceptions;
 use Playcat\Queue\Protocols\ProducerData;
 
@@ -31,50 +32,54 @@ class StreamSocket implements TimerClientInterface
     protected function getClient()
     {
         if (self::$client === null) {
-            $context = stream_context_create();
-            if (!preg_match('/^unix:(.*)$/i', $this->config['timerserver'], $matches)) {
+            if (!preg_match('/^unix:(.*)$/i', $this->config['timerserver'], $matches) &&
+                !preg_match('/^tcp:(.*)$/i', $this->config['timerserver'], $matches)
+            ) {
                 $this->config['timerserver'] = 'tcp://' . $this->config['timerserver'];
             }
+            $context = stream_context_create();
             $socket = @stream_socket_client(
                 $this->config['timerserver'],
                 $error,
                 $errorMessage,
                 3,
-                STREAM_CLIENT_CONNECT,
+                STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT,
                 $context
             );
-
             if ($socket === false) {
-                throw new ConnectFailExceptions('Connect to playcat time server failed. ' . $errorMessage);
+                throw new DisconnectedExceptions('Connect to playcat time server failed. ' . $errorMessage, 100);
             }
+
             self::$client = $socket;
         }
         return self::$client;
     }
 
     /**
-     * @return false|string
+     * @return string
      * @throws ConnectFailExceptions
+     * @throws DisconnectedExceptions
      */
     protected function socketRead()
     {
         $result = fread($this->getClient(), 2048);
-        if ($result == false) {
-            throw new ConnectFailExceptions('Get data error!');
+        if (!$result) {
+            throw new DisconnectedExceptions('Get data error!', 100);
         }
         return $result;
     }
 
     /**
      * @param string $protocols
-     * @return false|int
+     * @return int
      * @throws ConnectFailExceptions
+     * @throws DisconnectedExceptions
      */
     protected function socketWrite(string $protocols)
     {
         $result = fwrite($this->getClient(), $protocols . "\n");
-        if ($result == false) {
-            throw new ConnectFailExceptions('Send data error!');
+        if (!$result) {
+            throw new DisconnectedExceptions('Send data error!', 100);
         }
         return $result;
     }
@@ -101,6 +106,7 @@ class StreamSocket implements TimerClientInterface
      * @param string $command
      * @param ProducerData $payload
      * @return array
+     * @throws ConnectFailExceptions
      */
     public function sendCommand(string $command, ProducerData $payload): array
     {
@@ -111,17 +117,18 @@ class StreamSocket implements TimerClientInterface
             $protocols->setPayload($payload);
             $this->socketWrite($this->serializeProtocols($protocols));
             $result = $this->unserializeProtocols($this->socketRead());
-        } catch (ConnectFailExceptions $e) {
+        } catch (DisconnectedExceptions $e) {
             //ok,let's reconnecten next time.
             $this->disconnect();
+            throw new ConnectFailExceptions('Disconnect Timerserver!', 100);
         }
         return $result;
     }
 
     /**
-     * join a delay message
      * @param ProducerData $payload
      * @return string
+     * @throws ConnectFailExceptions
      */
     public function push(ProducerData $payload): string
     {
@@ -130,9 +137,9 @@ class StreamSocket implements TimerClientInterface
     }
 
     /**
-     * delete a delay message
      * @param ProducerData $payload
      * @return bool
+     * @throws ConnectFailExceptions
      */
     public function del(ProducerData $payload): bool
     {
@@ -142,26 +149,14 @@ class StreamSocket implements TimerClientInterface
 
 
     /**
-     * @return bool
-     */
-    public function keepAlive(): bool
-    {
-        fwrite(self::$client, 'ping' . "\n");
-        $pong = fread(self::$client, 4);
-        if ($pong != 'pong') {
-            $this->disconnect();
-            return false;
-        }
-        return true;
-    }
-
-    /**
      * @return void
      */
     public function disconnect(): void
     {
-        fclose(self::$client);
-        self::$client = null;
+        if (is_resource(self::$client)) {
+            stream_socket_shutdown(self::$client, STREAM_SHUT_RDWR);
+            self::$client = null;
+        }
     }
 
 }
