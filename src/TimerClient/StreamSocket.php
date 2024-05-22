@@ -14,6 +14,7 @@ namespace Playcat\Queue\TimerClient;
 use Playcat\Queue\Exceptions\DisconnectedExceptions;
 use Playcat\Queue\Exceptions\ConnectFailExceptions;
 use Playcat\Queue\Protocols\ProducerData;
+use Playcat\Queue\Log\Log;
 
 class StreamSocket implements TimerClientInterface
 {
@@ -32,6 +33,7 @@ class StreamSocket implements TimerClientInterface
     protected function getClient()
     {
         if (self::$client === null) {
+            Log::info('Connect To Timer Server!');
             if (!preg_match('/^unix:(.*)$/i', $this->config['timerserver'], $matches) &&
                 !preg_match('/^tcp:(.*)$/i', $this->config['timerserver'], $matches)
             ) {
@@ -47,7 +49,9 @@ class StreamSocket implements TimerClientInterface
                 $context
             );
             if ($socket === false) {
-                throw new DisconnectedExceptions('Connect to playcat time server failed. ' . $errorMessage, 100);
+                $message = 'Connect to playcat time server failed. ' . $errorMessage;
+                Log::warning($message);
+                throw new DisconnectedExceptions($message, 100);
             }
 
             self::$client = $socket;
@@ -64,7 +68,9 @@ class StreamSocket implements TimerClientInterface
     {
         $result = fread($this->getClient(), 2048);
         if (!$result) {
-            throw new DisconnectedExceptions('Get data error!', 100);
+            $message = 'Get data error!';
+            Log::critical($message);
+            throw new DisconnectedExceptions($message, 100);
         }
         return $result;
     }
@@ -79,7 +85,9 @@ class StreamSocket implements TimerClientInterface
     {
         $result = fwrite($this->getClient(), $protocols . "\n");
         if (!$result) {
-            throw new DisconnectedExceptions('Send data error!', 100);
+            $message = 'Send data error!';
+            Log::critical($message);
+            throw new DisconnectedExceptions($message, 100);
         }
         return $result;
     }
@@ -120,7 +128,9 @@ class StreamSocket implements TimerClientInterface
         } catch (DisconnectedExceptions $e) {
             //ok,let's reconnecten next time.
             $this->disconnect();
-            throw new ConnectFailExceptions('Disconnect Timerserver!', 100);
+            $message = 'Disconnect Timerserver!';
+            Log::critical($message);
+            throw new ConnectFailExceptions($message, 100);
         }
         return $result;
     }
