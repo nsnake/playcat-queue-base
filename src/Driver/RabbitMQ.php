@@ -16,6 +16,7 @@ use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 use Playcat\Queue\Exceptions\ConnectFailExceptions;
 use Playcat\Queue\Exceptions\ParamsError;
+use Playcat\Queue\Log\Log;
 use Playcat\Queue\Protocols\ConsumerData;
 use Playcat\Queue\Protocols\ConsumerDataInterface;
 use Playcat\Queue\Protocols\ProducerDataInterface;
@@ -54,8 +55,11 @@ class RabbitMQ extends Base implements DriverInterface
                 $this->config['options']['vhost'] ?? '/'
             );
         } catch (\Exception $e) {
-            throw new ConnectFailExceptions('Connection to Rabbitmq failed.' . $e->getMessage());
+            $message = 'Connection to Rabbitmq failed.' . $e->getMessage();
+            Log::emergency($message);
+            throw new ConnectFailExceptions($message);
         }
+        Log::info('Driver By RabbitMQ');
     }
 
     /**

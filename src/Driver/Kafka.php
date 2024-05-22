@@ -16,6 +16,7 @@ use Playcat\Queue\Protocols\ConsumerData;
 use Playcat\Queue\Protocols\ConsumerDataInterface;
 use Playcat\Queue\Protocols\ProducerDataInterface;
 use RuntimeException;
+use Playcat\Queue\Log\Log;
 
 class Kafka extends Base implements DriverInterface
 {
@@ -28,13 +29,16 @@ class Kafka extends Base implements DriverInterface
     public function __construct(array $config)
     {
         if (!extension_loaded('rdKafka')) {
-            throw new RuntimeException('Please make sure the PHP RdKafka extension is installed and enabled.');
+            $message = 'Can not load Kafka extension, Please make sure the PHP RdKafka extension is installed and enabled.';
+            Log::emergency($message);
+            throw new RuntimeException($message);
         }
         $this->config = new \RdKafka\Conf();
         $this->config->set('group.id', self::CONSUMERGROUPNAME);
         $this->config->set('metadata.broker.list', $config['host']);
         $this->config->set('auto.offset.reset', 'earliest');
         $this->config->set('enable.partition.eof', 'true');
+        Log::info('Driver By Kafka');
     }
 
     /**

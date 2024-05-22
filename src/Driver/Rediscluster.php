@@ -12,6 +12,7 @@
 namespace Playcat\Queue\Driver;
 
 use Playcat\Queue\Exceptions\ParamsError;
+use Playcat\Queue\Log\Log;
 use Playcat\Queue\Model\Payload;
 use Playcat\Queue\Protocols\ConsumerData;
 use Playcat\Queue\Protocols\ConsumerDataInterface;
@@ -31,10 +32,13 @@ class Rediscluster extends Base implements DriverInterface
     public function __construct(array $config)
     {
         if (!extension_loaded('redis')) {
-            throw new RuntimeException('Please make sure the PHP Redis extension is installed and enabled.');
+            $message = 'Can not load Redis extension, Please make sure the PHP Redis extension is installed and enabled.';
+            Log::emergency($message);
+            throw new RuntimeException($message);
         }
         $this->config = $config;
         $this->getRedis();
+        Log::info('Driver By Redis Cluster');
     }
 
 
