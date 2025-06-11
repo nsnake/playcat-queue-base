@@ -17,8 +17,9 @@ class TimerClientProtocols
 {
     const CMD_PUSH = 'push';
     const CMD_DEL = 'del';
+    const CMD_PING = 'ping';
 
-    protected $ver = '1.0';
+    protected $ver = '1.1';
     protected $cmd;
 
     protected $payload;
