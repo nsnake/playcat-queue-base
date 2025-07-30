@@ -126,4 +126,24 @@ class Redis extends Base implements DriverInterface
         return $this->getRedis()->xadd($payload->getChannel(), '*', $payload->serializeData(true));
     }
 
+    /**
+     * Flush the queue safely
+     * @param string $channel
+     * @return int|bool
+     */
+    public function flush(string $channel): int|bool
+    {
+        return $this->getRedis()->xtrim($queue, 'MAXLEN', 0);
+    }
+
+    /**
+     * Delete data if it hasn't already been done
+     * @param string $channel
+     * @param array $ids
+     * @return int|bool
+     */
+    public function del(string $channel, array $ids): int|bool
+    {
+        return $this->getRedis()->xdel($queue, $ids);
+    }
 }

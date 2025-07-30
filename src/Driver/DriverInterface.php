@@ -6,7 +6,7 @@
  *
  * For full copyright and license information, please see the LICENCE files.
  *
- * @author CGI.NET
+ * @author CGI.NET <318274085>
  */
 
 namespace Playcat\Queue\Driver;
@@ -26,5 +26,9 @@ interface DriverInterface
     public function push(ProducerDataInterface $payload): ?string;
 
     public function consumerFinished(): bool;
+
+    public function flush(string $channel): int|bool;
+
+    public function del(string $channel, array $ids): int|bool;
 }
 

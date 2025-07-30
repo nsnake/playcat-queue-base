@@ -28,6 +28,7 @@ class RabbitMQ extends Base implements DriverInterface
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     public const CONSUMEREXCHANGENAM = 'PLAYCATCONSUMERGEXCHANGE';
     private $config = [];
+    private $del_msgid = [];
 
     /**
      * @var AMQPStreamConnection
@@ -82,7 +83,6 @@ class RabbitMQ extends Base implements DriverInterface
      */
     public function subscribe(array $channels): bool
     {
-
         foreach ($channels as $channel) {
             $this->getConnection()->queue_bind(self::CONSUMERGROUPNAME, self::CONSUMEREXCHANGENAM, $channel);
         }
@@ -96,13 +96,15 @@ class RabbitMQ extends Base implements DriverInterface
      */
     public function shift(): ?ConsumerDataInterface
     {
+        $result = null;
         $result = $this->getConnection()->basic_get(self::CONSUMERGROUPNAME);
         if ($result) {
             $this->current_msg = $result;
-            $result = new ConsumerData($result->body);
-            $result->setID($this->current_msg->get('message_id'));
-        } else {
-            $result = null;
+            $msg_id = $this->current_msg->get('message_id');
+            if (!in_array($msg_id, $this->del_msgid)) {
+                $result = new ConsumerData($result->body);
+                $result->setID($msg_id);
+            }
         }
         return $result;
     }
@@ -128,4 +130,29 @@ class RabbitMQ extends Base implements DriverInterface
         $this->getConnection()->basic_publish($data, self::CONSUMEREXCHANGENAM, $payload->getChannel());
         return $msgid;
     }
+
+    /**
+     * @param string $channel
+     * @return bool
+     */
+    public function flush(string $channel): bool
+    {
+        $this->getConnection()->queue_unbind(self::CONSUMERGROUPNAME, self::CONSUMEREXCHANGENAM, $channel);
+        $this->getConnection()->queue_delete(self::CONSUMERGROUPNAME);
+        $this->getConnection()->queue_declare(self::CONSUMERGROUPNAME, false, true, false, false);
+        $this->getConnection()->queue_bind(self::CONSUMERGROUPNAME, self::CONSUMEREXCHANGENAM, $channel);
+        return true;
+    }
+
+    /**
+     * @param string $channel
+     * @param array $ids
+     * @return bool
+     */
+    public function del(string $channel, array $ids): bool
+    {
+        $this->del_msgid = array_merge($this->del_msgid, $ids);
+        return true;
+    }
+
 }

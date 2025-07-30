@@ -81,8 +81,11 @@ class Kafka extends Base implements DriverInterface
         switch ($message->err) {
             case RD_KAFKA_RESP_ERR_NO_ERROR:
                 $msgid = $message->headers['message_id'];
-                $result = new ConsumerData($message->payload);
-                $result->setID($msgid);
+                //Messages that have been deleted are not processed
+                if (!empty($message->payload)) {
+                    $result = new ConsumerData($message->payload);
+                    $result->setID($msgid);
+                }
                 break;
             case RD_KAFKA_RESP_ERR__PARTITION_EOF:
             case RD_KAFKA_RESP_ERR__TIMED_OUT:
@@ -110,8 +113,37 @@ class Kafka extends Base implements DriverInterface
         $this->getKafkaProduce()
             ->newTopic($payload->getChannel())
             ->producev(RD_KAFKA_PARTITION_UA, 0, $payload->serializeData(), null, ['message_id' => $msgid]);
-        return $this->getKafkaProduce()->flush(100) === RD_KAFKA_RESP_ERR_NO_ERROR
+        return $this->getKafkaProduce()->flush(500) === RD_KAFKA_RESP_ERR_NO_ERROR
             ? $msgid : '';
     }
 
+    /**
+     * @param string $queue
+     * @return int|bool
+     */
+    public function flush(string $channel): bool
+    {
+        return (new \RdKafka\AdminClient($this->config))
+            ->deleteTopic([$queue], 5000);
+    }
+
+
+    /**
+     * @param string $channel
+     * @param array $ids
+     * @return int
+     */
+    public function del(string $channel, array $ids): int
+    {
+        $result = 0;
+        foreach ($ids as $msgid) {
+            $this->getKafkaProduce()
+                ->newTopic($payload->getChannel())
+                ->producev(RD_KAFKA_PARTITION_UA, 0, '', null, ['message_id' => $msgid]);
+            if ($this->getKafkaProduce()->flush(500) === RD_KAFKA_RESP_ERR_NO_ERROR) {
+                $result++;
+            }
+        }
+        return $result;
+    }
 }
