@@ -149,7 +149,7 @@ class RabbitMQ extends Base implements DriverInterface
      */
     public function del(string $channel, array $ids): bool
     {
-        return false
+        return false;
     }
 
 }
