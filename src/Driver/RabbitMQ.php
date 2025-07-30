@@ -28,7 +28,6 @@ class RabbitMQ extends Base implements DriverInterface
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     public const CONSUMEREXCHANGENAM = 'PLAYCATCONSUMERGEXCHANGE';
     private $config = [];
-    private $del_msgid = [];
 
     /**
      * @var AMQPStreamConnection
@@ -101,10 +100,8 @@ class RabbitMQ extends Base implements DriverInterface
         if ($result) {
             $this->current_msg = $result;
             $msg_id = $this->current_msg->get('message_id');
-            if (!in_array($msg_id, $this->del_msgid)) {
-                $result = new ConsumerData($result->body);
-                $result->setID($msg_id);
-            }
+            $result = new ConsumerData($result->body);
+            $result->setID($msg_id);
         }
         return $result;
     }
@@ -145,14 +142,14 @@ class RabbitMQ extends Base implements DriverInterface
     }
 
     /**
+     * Not supported in RabbitMQ
      * @param string $channel
      * @param array $ids
      * @return bool
      */
     public function del(string $channel, array $ids): bool
     {
-        $this->del_msgid = array_merge($this->del_msgid, $ids);
-        return true;
+        return false
     }
 
 }
