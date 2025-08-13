@@ -25,6 +25,7 @@ class Storage implements StorageInterface
      */
     public function setDriver(array $config): void
     {
+        $config['break_reconnect'] = true;
         $db = new DbManager();
         $db->setConfig([
             'default' => $config['type'],
