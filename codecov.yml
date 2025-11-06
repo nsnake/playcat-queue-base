@@ -1,0 +1,20 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%    # 代码覆盖率目标
+        threshold: 1%  # 允许的覆盖率降低范围
+    patch:
+      default:
+        target: 80%    # 新代码的覆盖率目标
+
+comment:
+  layout: "reach, diff, flags, files"
+  behavior: default
+  require_changes: false  # 即使没有覆盖率变化也发表评论
+  require_base: no
+  require_head: yes
+
+ignore:
+  - "tests/**/*"         # 忽略测试文件
+  - "vendor/**/*"        # 忽略vendor目录
