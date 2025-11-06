@@ -50,7 +50,7 @@
   },
   "scripts": {
     "test": "php vendor/bin/phpunit",
-    "test-coverage": "php vendor/bin/phpunit --coverage-clover=coverage.xml",
+    "test-coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-clover=coverage.xml",
     "test-unit": "php vendor/bin/phpunit --testsuite Unit",
     "test-integration": "php vendor/bin/phpunit --testsuite Integration"
   },
