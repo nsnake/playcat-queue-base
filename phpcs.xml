@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="PlaycatQueue">
+    <description>Playcat Queue PHP_CodeSniffer configuration</description>
+
+    <!-- 指定要检查的文件和目录 -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- 排除第三方库和生成的文件 -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <!-- 使用PSR12标准 -->
+    <rule ref="PSR12">
+        <!-- 允许更长的行长度 -->
+        <exclude name="Generic.Files.LineLength"/>
+    </rule>
+
+    <!-- 设置显示警告 -->
+    <showWarnings>true</showWarnings>
+
+    <!-- 设置显示进度 -->
+    <showProgress>true</showProgress>
+
+    <!-- 设置报告类型 -->
+    <arg name="colors"/>
+    <arg value="sp"/>
+
+    <!-- PHP版本兼容性 -->
+    <config name="php_version" value="80100"/>
+</ruleset>

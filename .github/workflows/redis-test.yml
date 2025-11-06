@@ -42,6 +42,19 @@ jobs:
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress
       
+      - name: Run PHP syntax check
+        run: |
+          echo "Running PHP syntax check on src directory..."
+          find src -type f -name "*.php" -exec php -l {} \;
+      
+      - name: Run PHP_CodeSniffer analysis
+        run: |
+          echo "Running PHP_CodeSniffer analysis..."
+          vendor/bin/phpcs --standard=phpcs.xml --report-width=200
+          
+          # 如果发现错误或警告过多，可以只报告错误而不中断构建
+          # vendor/bin/phpcs --standard=phpcs.xml --report-width=200 --runtime-set ignore_warnings_on_exit 1
+      
       - name: Run Redis tests
         run: |
           echo "Running Redis-specific tests..."
