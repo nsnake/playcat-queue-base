@@ -4,11 +4,9 @@
 
     <!-- 指定要检查的文件和目录 -->
     <file>src</file>
-    <file>tests</file>
 
     <!-- 排除第三方库和生成的文件 -->
     <exclude-pattern>*/vendor/*</exclude-pattern>
-    <exclude-pattern>*/node_modules/*</exclude-pattern>
 
     <!-- 使用PSR12标准 -->
     <rule ref="PSR12">
