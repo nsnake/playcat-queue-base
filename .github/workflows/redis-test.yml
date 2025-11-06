@@ -1,0 +1,60 @@
+name: Redis Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  redis-test:
+    runs-on: ubuntu-latest
+    
+    services:
+      redis:
+        image: redis:latest
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    strategy:
+      matrix:
+        php-version: ['8.1', '8.2', '8.3', '8.4']
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: redis, msgpack
+          coverage: none
+      
+      - name: Validate composer.json and composer.lock
+        run: composer validate --strict
+      
+      - name: Install dependencies
+        run: composer install --prefer-dist --no-progress
+      
+      - name: Run Redis tests
+        run: |
+          echo "Running Redis-specific tests..."
+          
+          # 运行单元测试
+          echo "Running unit tests..."
+          vendor/bin/phpunit --testsuite Unit
+          
+          # 运行集成测试
+          echo "Running integration tests..."
+          vendor/bin/phpunit --testsuite Integration
+          
+          # 运行特定于Redis驱动的测试
+          echo "Running Redis driver tests..."
+          vendor/bin/phpunit tests/Unit/Driver/RedisTest.php
+          vendor/bin/phpunit tests/Integration/Driver/RedisIntegrationTest.php
