@@ -25,8 +25,8 @@
     "topthink/think-orm": "^2.0|^3.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "*",
-    "mockery/mockery": "*"
+    "phpunit/phpunit": ">=10.0",
+    "mockery/mockery": "^1.6"
   },
   "autoload": {
     "psr-4": {
@@ -50,7 +50,6 @@
   },
   "scripts": {
     "test": "php vendor/bin/phpunit",
-    "test-coverage": "php -d xdebug.mode=coverage vendor/bin/phpunit --coverage-clover=coverage.xml",
     "test-unit": "php vendor/bin/phpunit --testsuite Unit",
     "test-integration": "php vendor/bin/phpunit --testsuite Integration"
   },
