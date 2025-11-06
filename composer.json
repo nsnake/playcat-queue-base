@@ -49,8 +49,8 @@
     "prefer-stable": true
   },
   "scripts": {
-    "test": "php vendor/bin/phpunit --testsuite Integration",
-    "test-coverage": "php vendor/bin/phpunit --testsuite Integration",
+    "test": "php vendor/bin/phpunit",
+    "test-coverage": "php vendor/bin/phpunit --coverage-clover=coverage.xml",
     "test-unit": "php vendor/bin/phpunit --testsuite Unit",
     "test-integration": "php vendor/bin/phpunit --testsuite Integration"
   },
