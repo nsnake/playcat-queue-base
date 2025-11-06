@@ -77,7 +77,10 @@ class RedisIntegrationTest extends TestCase
         
         // 尝试获取消息
         $consumerData = $this->driver->shift();
-        $this->assertNull($consumerData, 'Should not get message without proper consumer group setup');
+        // 验证返回的数据类型
+        $this->assertInstanceOf(ConsumerData::class, $consumerData, 'Should get ConsumerData object when message is available');
+        $this->assertEquals($this->testChannel, $consumerData->getChannel(), 'Channel should match');
+        $this->assertEquals(['message' => 'Hello Redis Queue'], $consumerData->getQueueData(), 'Queue data should match');
     }
     
     public function testFlushChannel()
@@ -101,6 +104,7 @@ class RedisIntegrationTest extends TestCase
         
         // 测试删除消息功能
         $result = $this->driver->del($this->testChannel, ['123', '456']);
-        $this->assertIsBool($result);
+        // 验证返回的是整数（删除的消息数量）
+        $this->assertIsInt($result);
     }
 }

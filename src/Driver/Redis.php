@@ -133,7 +133,7 @@ class Redis extends Base implements DriverInterface
      */
     public function flush(string $channel): int|bool
     {
-        return $this->getRedis()->xtrim($queue, 'MAXLEN', 0);
+        return $this->getRedis()->xtrim($channel, 'MAXLEN', 0);
     }
 
     /**
@@ -144,6 +144,6 @@ class Redis extends Base implements DriverInterface
      */
     public function del(string $channel, array $ids): int|bool
     {
-        return $this->getRedis()->xdel($queue, $ids);
+        return $this->getRedis()->xdel($channel, $ids);
     }
 }
