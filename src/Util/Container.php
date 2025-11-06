@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -14,13 +15,10 @@ namespace Playcat\Queue\Util;
 use Exception;
 use Psr\Container\ContainerInterface;
 
-
 class Container implements ContainerInterface
 {
     protected static $instance;
-
     protected $instances = [];
-
     public static function instance(): Container
     {
         if (!self::$instance instanceof self) {

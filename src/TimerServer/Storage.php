@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -13,6 +14,7 @@ namespace Playcat\Queue\TimerServer;
 
 use Playcat\Queue\Protocols\ProducerData;
 use think\db\BaseQuery;
+use think\db\exception\DbException;
 use think\DbManager;
 
 class Storage implements StorageInterface
@@ -90,7 +92,7 @@ class Storage implements StorageInterface
     /**
      * @param int $jid
      * @return int
-     * @throws \think\db\exception\DbException
+     * @throws DbException
      */
     public function delData(int $jid): int
     {
@@ -99,29 +101,24 @@ class Storage implements StorageInterface
 
     /**
      * @return array
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\DbException
-     * @throws \think\db\exception\ModelNotFoundException
      */
     public function getHistoryJobs(): array
     {
         return $this->getTable()
             ->select()
             ->map(function ($item) {
+
                 $item['data'] = $this->unserializeData($item['data']);
                 return $item;
             })->toArray();
     }
 
     /**
-     * @param string $data
+     * @param string $serializeData
      * @return ProducerData
      */
     private function unserializeData(string $serializeData): ProducerData
     {
         return unserialize($serializeData);
     }
-
 }
-
-

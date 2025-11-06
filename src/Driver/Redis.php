@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -22,7 +23,6 @@ use RuntimeException;
 
 class Redis extends Base implements DriverInterface
 {
-
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     protected $channels = [];
     private $redis;
@@ -67,7 +67,6 @@ class Redis extends Base implements DriverInterface
                 $this->connectRedis();
             }
         } catch (RedisException $e) {
-
         }
         return $this->redis;
     }
@@ -81,8 +80,10 @@ class Redis extends Base implements DriverInterface
         $result = true;
         foreach ($channels as $channel) {
             $this->channels[$channel] = '>';
-            if (!$this->getRedis()
-                ->xGroup('CREATE', $channel, self::CONSUMERGROUPNAME, '0', true)) {
+            if (
+                !$this->getRedis()
+                    ->xGroup('CREATE', $channel, self::CONSUMERGROUPNAME, '0', true)
+            ) {
                 $result = false;
             }
         }

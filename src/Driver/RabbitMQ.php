@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -24,11 +25,9 @@ use RuntimeException;
 
 class RabbitMQ extends Base implements DriverInterface
 {
-
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     public const CONSUMEREXCHANGENAM = 'PLAYCATCONSUMERGEXCHANGE';
     private $config = [];
-
     /**
      * @var AMQPStreamConnection
      */
@@ -47,13 +46,7 @@ class RabbitMQ extends Base implements DriverInterface
     {
         $this->config = $config;
         try {
-            $this->connection = new AMQPStreamConnection(
-                parse_url($this->config['host'], PHP_URL_HOST),
-                parse_url($this->config['host'], PHP_URL_PORT),
-                $this->config['options']['user'] ?? 'guest',
-                $this->config['options']['password'] ?? 'guest',
-                $this->config['options']['vhost'] ?? '/'
-            );
+            $this->connection = new AMQPStreamConnection(parse_url($this->config['host'], PHP_URL_HOST), parse_url($this->config['host'], PHP_URL_PORT), $this->config['options']['user'] ?? 'guest', $this->config['options']['password'] ?? 'guest', $this->config['options']['vhost'] ?? '/');
         } catch (\Exception $e) {
             $message = 'Connection to Rabbitmq failed.' . $e->getMessage();
             Log::emergency($message);
@@ -86,7 +79,6 @@ class RabbitMQ extends Base implements DriverInterface
             $this->getConnection()->queue_bind(self::CONSUMERGROUPNAME, self::CONSUMEREXCHANGENAM, $channel);
         }
         return true;
-
     }
 
     /**
@@ -151,5 +143,4 @@ class RabbitMQ extends Base implements DriverInterface
     {
         return false;
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -31,4 +32,3 @@ interface DriverInterface
 
     public function del(string $channel, array $ids): int|bool;
 }
-

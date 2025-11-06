@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -18,8 +19,7 @@ class ProducerData implements ProducerDataInterface
     protected $queue_data = '[]';
     protected $delay_time = 0;
     protected $id = '';
-
-    /**
+/**
      * @param string $id
      * @return void
      */
@@ -110,6 +110,4 @@ class ProducerData implements ProducerDataInterface
         ]) ?? [];
         return $is_redis === false ? $data : ["data" => $data];
     }
-
-
 }

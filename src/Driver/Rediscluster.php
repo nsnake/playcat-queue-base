@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -21,7 +22,6 @@ use RuntimeException;
 
 class Rediscluster extends Base implements DriverInterface
 {
-
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     protected $channels = [];
     private $redis;
@@ -48,7 +48,7 @@ class Rediscluster extends Base implements DriverInterface
      */
     private function connectRedis(): void
     {
-        $this->redis = new \RedisCluster(NULL, $this->config['host'], $this->config['options']['timeout'] ?? 1.5, $this->config['options']['timeout'] ?? 1.5, false, $this->config['options']['auth']);
+        $this->redis = new \RedisCluster(null, $this->config['host'], $this->config['options']['timeout'] ?? 1.5, $this->config['options']['timeout'] ?? 1.5, false, $this->config['options']['auth']);
         $this->redis->setOption(\RedisCluster::OPT_SLAVE_FAILOVER, \RedisCluster::FAILOVER_DISTRIBUTE);
     }
 
@@ -75,8 +75,10 @@ class Rediscluster extends Base implements DriverInterface
         $result = true;
         foreach ($channels as $channel) {
             $this->channels[$channel] = '>';
-            if (!$this->getRedis()
-                ->xGroup('CREATE', $channel, self::CONSUMERGROUPNAME, '0', true)) {
+            if (
+                !$this->getRedis()
+                    ->xGroup('CREATE', $channel, self::CONSUMERGROUPNAME, '0', true)
+            ) {
                 $result = false;
             }
         }

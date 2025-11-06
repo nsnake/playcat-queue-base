@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -15,13 +16,11 @@ use Playcat\Queue\Protocols\ProducerDataInterface;
 
 class TimerClientProtocols
 {
-    const CMD_PUSH = 'push';
-    const CMD_DEL = 'del';
-    const CMD_PING = 'ping';
-
+    public const CMD_PUSH = 'push';
+    public const CMD_DEL = 'del';
+    public const CMD_PING = 'ping';
     protected $ver = '1.1';
     protected $cmd;
-
     protected $payload;
 
     public function setCMD(string $cmd): void
@@ -49,5 +48,3 @@ class TimerClientProtocols
         return $this->ver;
     }
 }
-
-

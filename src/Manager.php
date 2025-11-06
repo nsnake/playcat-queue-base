@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -43,5 +44,4 @@ class Manager extends Base
         }
         return $this->tc;
     }
-
 }

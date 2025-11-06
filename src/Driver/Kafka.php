@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -20,7 +21,6 @@ use Playcat\Queue\Log\Log;
 
 class Kafka extends Base implements DriverInterface
 {
-
     public const CONSUMERGROUPNAME = 'PLAYCATCONSUMERGROUP';
     private $kafka_consumer;
     private $kafka_producer;
@@ -86,6 +86,7 @@ class Kafka extends Base implements DriverInterface
                     $result = new ConsumerData($message->payload);
                     $result->setID($msgid);
                 }
+
                 break;
             case RD_KAFKA_RESP_ERR__PARTITION_EOF:
             case RD_KAFKA_RESP_ERR__TIMED_OUT:

@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -45,8 +46,8 @@ class Log
     }
 
     /**
-     * @param string $level
-     * @param array|string $message
+     * @param string $method_name
+     * @param array $args
      * @return void
      */
     public static function __callStatic(string $method_name, array $args): void

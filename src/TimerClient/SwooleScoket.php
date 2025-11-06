@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -52,5 +53,4 @@ class SwooleScoket extends StreamSocket
     {
         return $this->getClient()->send($protocols) . "\r\n";
     }
-
 }

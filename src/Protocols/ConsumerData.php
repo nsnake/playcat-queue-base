@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -21,8 +22,7 @@ class ConsumerData implements ConsumerDataInterface
     protected $queue_data = '[]';
     protected $delay_time = 0;
     protected $id = '';
-
-    /**
+/**
      * @param array $payload
      * @throws ParamsError
      */
@@ -73,7 +73,4 @@ class ConsumerData implements ConsumerDataInterface
             : $serialize_data['data'];
         return msgpack_unpack($serialize_data) ?? [];
     }
-
 }
-
-

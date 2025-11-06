@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -33,7 +34,7 @@ class Base implements ManegerInterface
     protected function getProducer(): DriverInterface
     {
         if (!$this->producer || !$this->producer instanceof DriverInterface) {
-            $this->producer = (new Producer())->DriverByAuto($this->manager_config);
+            $this->producer = (new Producer())->driverByAuto($this->manager_config);
         }
         return $this->producer;
     }

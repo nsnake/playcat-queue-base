@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -41,9 +42,7 @@ class InitDB
             ]
         ]);
         $this->db = $db->connect();
-
         $sql = 'CREATE TABLE `jobs`  (`jid` int(0) UNSIGNED NOT NULL AUTO_INCREMENT,`timerid` int(0) NOT NULL DEFAULT -1,`iconicid` int(0) NOT NULL DEFAULT -1,`data` blob NULL,`expiration` int(0) UNSIGNED NOT NULL DEFAULT 0,PRIMARY KEY (`jid`) USING BTREE) ENGINE = InnoDB;';
-
         $is_success = true;
         try {
             $this->db->execute($sql);
@@ -62,8 +61,5 @@ class InitDB
         $pdo = new \PDO('sqlite:' . $this->config['database']);
         $result = $pdo->exec($sql);
         return $result === 0 ? true : false;
-
     }
-
-
 }

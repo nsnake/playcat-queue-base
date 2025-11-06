@@ -1,4 +1,5 @@
 <?php
+
 /**
  *
  *
@@ -16,11 +17,9 @@ use Playcat\Queue\TimerClient\TimerClientProtocols;
 
 interface TimerClientInterface
 {
+    public function sendCommand(string $command, ProducerData $payload): array;
 
-    function sendCommand(string $command, ProducerData $payload): array;
+    public function push(ProducerData $payload): string;
 
-    function push(ProducerData $payload): string;
-
-    function del(ProducerData $payload): bool;
+    public function del(ProducerData $payload): bool;
 }
-
