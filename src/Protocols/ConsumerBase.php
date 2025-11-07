@@ -17,8 +17,8 @@ namespace Playcat\Queue\Protocols;
  */
 class ConsumerBase implements ConsumerInterface
 {
-    public const max_attempts = null;
-    public const retry_seconds = null;
+    public const  MAX_ATTEMPTS = null;
+    public const  RETRY_SECONDS = null;
 
     public function onInit()
     {
