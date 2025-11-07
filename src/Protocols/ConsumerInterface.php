@@ -17,5 +17,7 @@ namespace Playcat\Queue\Protocols;
  */
 interface ConsumerInterface
 {
+    public function onInit();
+
     public function consume(ConsumerData $data);
 }

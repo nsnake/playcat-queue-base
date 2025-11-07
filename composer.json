@@ -40,8 +40,8 @@
     }
   },
   "suggest": {
-    "ext-rdKafka": "Kafka.",
-    "php-amqplib/php-amqplib": "Rabbitmq."
+    "ext-rdKafka": "Use Kafka to store and consume messages.",
+    "php-amqplib/php-amqplib": "Use Rabbitmq to store and consume messages."
   },
   "config": {
     "preferred-install": "dist",
